@@ -1,8 +1,10 @@
 <html>
-    <head><title>AreaDeltaCalc</title></head>
+    <head>
+        <title>AreaDeltaCalc</title>
+    </head>
     <body>
         <h1>AreaDeltaCalc</h1>
-        <form action="/calculate" method="get">
+        <form id="submit_form">
             <label for="lon">Longitude:</label>
             <input type="text" id="lon" name="lon" value={{lon}}>
             <label for="lat">Latitude:</label>
@@ -13,5 +15,41 @@
             <input type="date" id="after_end" name="after_end" value={{after_end}}>
             <input type="submit" value="Calculate Area Delta">
         </form>
+
+        <div id="result"><p>Results will be shown here</p></div>
+
+        <script>
+            const result = document.getElementById('result')
+            document.getElementById('submit_form').addEventListener('submit', async function(e) {
+                result.innerHTML = '<p>Loading...</p>'
+                e.preventDefault()
+        
+                const formData = new FormData(e.target)
+                const params = new URLSearchParams()
+                for (const pair of formData) {
+                    params.append(pair[0], pair[1])
+                }
+        
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params
+                })
+        
+                if (response.ok) {
+                    const data = await response.json()
+                    let html = '<h2>Change in area (hectares):</h2><ul>'
+                    for (const [band, change] of Object.entries(data)) {
+                        html += `<li>${band}: ${change.toFixed(2)}</li>`
+                    }
+                    html += '</ul>'
+                    result.innerHTML = html
+                } else {
+                    result.innerHTML = '<p style="color:red;">Error calculating area change.</p>';
+                }
+            })
+        </script>
     </body>
 </html>

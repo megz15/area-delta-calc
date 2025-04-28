@@ -46,17 +46,17 @@ def calc_area_change(old_col, new_col, region):
 @app.route('/')
 def index():
     return render_template('index.html', lon = bits_audi_coords[0], lat = bits_audi_coords[1], 
-                           before_end = "01-28-2025", after_end = "04-28-2025")
+                           before_end = "2025-01-28", after_end = "2025-04-28")
 
-@app.route('/calculate', methods=['GET'])
+@app.route('/calculate', methods=['POST'])
 def calculate():
-    before_end = request.args.get('before', default="2025-01-28", type=str)
-    after_end = request.args.get('after', default="2025-04-28", type=str)
-    lat = request.args.get('lat', default=17.4534271, type=float)
-    lon = request.args.get('lon', default=78.32674059291753, type=float)
+    before_end = request.form.get('before_end', default="2025-01-28", type=str)
+    after_end = request.form.get('after_end', default="2025-04-28", type=str)
+    lat = request.form.get('lat', default=17.4534271, type=float)
+    lon = request.form.get('lon', default=78.32674059291753, type=float)
 
     region = ee.Geometry.Point([lon, lat])
-    region_b = region.buffer(5000)   
+    region_b = region.buffer(5000)
 
     before_dw = dw_col(ee.Date(before_end), region_b)
     after_dw = dw_col(ee.Date(after_end), region_b)
