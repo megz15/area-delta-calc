@@ -1,0 +1,17 @@
+<html>
+    <head><title>AreaDeltaCalc</title></head>
+    <body>
+        <h1>AreaDeltaCalc</h1>
+        <form action="/calculate" method="get">
+            <label for="lon">Longitude:</label>
+            <input type="text" id="lon" name="lon" value={{lon}}>
+            <label for="lat">Latitude:</label>
+            <input type="text" id="lat" name="lat" value={{lat}}>
+            <label for="before_end">Date 1:</label>
+            <input type="date" id="before_end" name="before_end" value={{before_end}}>
+            <label for="after_end">Date 2:</label>
+            <input type="date" id="after_end" name="after_end" value={{after_end}}>
+            <input type="submit" value="Calculate Area Delta">
+        </form>
+    </body>
+</html>
