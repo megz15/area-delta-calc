@@ -1,22 +1,122 @@
 <html>
     <head>
         <title>AreaDeltaCalc</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+        </style>
+
+        <style>
+            body {
+                background: #101016;
+                color: #f4f4f4;
+                font-family: "JetBrains Mono", monospace;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 18px;
+            }
+            
+            h1 {
+                letter-spacing: 1px;
+                font-weight: 700;
+            }
+            
+            .card {
+                background: #232329;
+                border-radius: 18px;
+                box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+                padding: 2rem 2.5rem 2rem 2.5rem;
+                min-width: 340px;
+                max-width: 95vw;
+                margin-bottom: 2rem;
+            }
+            
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 18px;
+            }
+            
+            label {
+                font-size: 1rem;
+                margin-bottom: 2px;
+                color: #a1a1aa;
+            }
+
+            input[type="text"], input[type="date"] {
+                background: #18181b;
+                color: #f4f4f5;
+                border: 1px solid #31313a;
+                border-radius: 7px;
+                padding: 8px 12px;
+                font-size: 1rem;
+                transition: border 0.2s;
+            }
+            
+            input[type="text"]:focus, input[type="date"]:focus {
+                border: 1.5px solid #6366f1;
+                outline: none;
+            }
+            
+            input[type="submit"] {
+                background-color: #6366f1;
+                color: #fff;
+                border: none;
+                border-radius: 7px;
+                padding: 10px 0;
+                font-size: 1.08rem;
+                font-weight: 600;
+                cursor: pointer;
+                margin-top: 8px;
+                transition: background 0.18s, transform 0.1s;
+            }
+            
+            input[type="submit"]:hover {
+                background-color: #a2a3f3;
+                transform: translateY(-2px) scale(1.03);
+            }
+            
+            #result {
+                margin-top: 1.5rem;
+                background: #232329;
+                border-radius: 14px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+                padding: 1.3rem 1.6rem;
+            }
+            
+            ul {
+                padding-left: 1.2rem;
+                margin: 0.5rem 0 0 0;
+            }
+            
+            li {
+                margin-bottom: 0.5rem;
+            }
+        </style>
     </head>
     <body>
-        <h1>AreaDeltaCalc</h1>
-        <form id="submit_form">
-            <label for="lon">Longitude:</label>
-            <input type="text" id="lon" name="lon" value={{lon}}>
-            <label for="lat">Latitude:</label>
-            <input type="text" id="lat" name="lat" value={{lat}}>
-            <label for="before_end">Date 1:</label>
-            <input type="date" id="before_end" name="before_end" value={{before_end}}>
-            <label for="after_end">Date 2:</label>
-            <input type="date" id="after_end" name="after_end" value={{after_end}}>
-            <input type="submit" value="Calculate Area Delta">
-        </form>
+        <div>
+            <h1>AreaDeltaCalc</h1>
+            <div class="card">
+                <form id="submit_form">
+                    <label for="lon">Longitude:</label>
+                    <input type="text" id="lon" name="lon" value={{lon}}>
+                    <label for="lat">Latitude:</label>
+                    <input type="text" id="lat" name="lat" value={{lat}}>
+                    <label for="before_end">Initial Date:</label>
+                    <input type="date" id="before_end" name="before_end" value={{before_end}}>
+                    <label for="after_end">Final Date:</label>
+                    <input type="date" id="after_end" name="after_end" value={{after_end}}>
+                    <input type="submit" value="Calculate Change in Area">
+                </form>
+            </div>
+        </div>
 
-        <div id="result"><p>Results will be shown here</p></div>
+        <div>
+            <h1>Results</h1>
+            <div id="result"><p>Results will be shown here</p></div>
+        </div>
 
         <script>
             const result = document.getElementById('result')
@@ -42,7 +142,8 @@
                     const data = await response.json()
                     let html = '<h2>Change in area (hectares):</h2><ul>'
                     for (const [band, change] of Object.entries(data)) {
-                        html += `<li>${band}: ${change.toFixed(2)}</li>`
+                        const color = change < 0 ? 'red' : 'limegreen';
+                        html += `<li>${band}: <span style="color:${color};">${change.toFixed(2)}</span></li>`;
                     }
                     html += '</ul>'
                     result.innerHTML = html
